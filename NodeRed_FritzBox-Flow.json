@@ -1,0 +1,686 @@
+[
+    {
+        "id": "b836e4c1fe6439a3",
+        "type": "tab",
+        "label": "Fritz-Box",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "1525cbb195b6f6ae",
+        "type": "group",
+        "z": "b836e4c1fe6439a3",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "9705b08b659a322d",
+            "9717d8ac7b8dfb6e",
+            "2a41ee37fc56811c",
+            "a32cb30a392c1a47",
+            "3c2a717f8f93bffe",
+            "2e985773b3207bfb",
+            "1a7b573d9e1542c4"
+        ],
+        "x": 14,
+        "y": 39,
+        "w": 1072,
+        "h": 202
+    },
+    {
+        "id": "17af548c752a868f",
+        "type": "group",
+        "z": "b836e4c1fe6439a3",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "b419e74a0ba80f78",
+            "30f2eb0de22c5a2f",
+            "aa2812bb7e44d635",
+            "10219db621a4a328",
+            "90e2d9019ac813d0",
+            "d0734367b980f32a",
+            "34fba991d675aa82",
+            "c1dd73e32d4dac3b",
+            "02618be48bd2c301",
+            "81896ed98d9fa718",
+            "1fc3a271d8394a46",
+            "f0f2a9a523906568",
+            "860a7ca1cc30f855",
+            "78d2c7941187c642",
+            "2ed8244f592b52b0",
+            "bcda690b2c177020",
+            "82354dfbdffb045c",
+            "2c87795415b6743d",
+            "931570c245c0dcf8",
+            "d97b637cd10e77bf",
+            "3700493d4715e70e",
+            "2fad49ec7ab3ed25",
+            "fbbb58fefeeddd32",
+            "a16d0990292042b6"
+        ],
+        "x": 14,
+        "y": 299,
+        "w": 2512,
+        "h": 582
+    },
+    {
+        "id": "9705b08b659a322d",
+        "type": "fritzbox-in",
+        "z": "b836e4c1fe6439a3",
+        "g": "1525cbb195b6f6ae",
+        "device": "6b667bb34ec64d53",
+        "name": "GuestWifi-Status",
+        "service": "urn:dslforum-org:service:WLANConfiguration:3",
+        "action": "GetInfo",
+        "arguments": "{}",
+        "x": 450,
+        "y": 160,
+        "wires": [
+            [
+                "9717d8ac7b8dfb6e"
+            ]
+        ]
+    },
+    {
+        "id": "9717d8ac7b8dfb6e",
+        "type": "function",
+        "z": "b836e4c1fe6439a3",
+        "g": "1525cbb195b6f6ae",
+        "name": "Switch NewEnable",
+        "func": "msg.payload = { \n    \"NewEnable\": (msg.payload.NewEnable == \"1\" ) ? \"0\" : \"1\"\n};\n\n//node.send(msg);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 160,
+        "wires": [
+            [
+                "3c2a717f8f93bffe",
+                "2a41ee37fc56811c"
+            ]
+        ]
+    },
+    {
+        "id": "2a41ee37fc56811c",
+        "type": "fritzbox-in",
+        "z": "b836e4c1fe6439a3",
+        "g": "1525cbb195b6f6ae",
+        "device": "6b667bb34ec64d53",
+        "name": "GuestWifi-SetStatus",
+        "service": "urn:dslforum-org:service:WLANConfiguration:3",
+        "action": "SetEnable",
+        "arguments": "{\n  \"NewEnable\": \"value\"\n}",
+        "x": 920,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a32cb30a392c1a47",
+        "type": "http in",
+        "z": "b836e4c1fe6439a3",
+        "g": "1525cbb195b6f6ae",
+        "name": "[GET] /api/fritzbox/guestwifi/toggle",
+        "url": "/api/fritzbox/guestwifi/toggle",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 180,
+        "y": 160,
+        "wires": [
+            [
+                "9705b08b659a322d"
+            ]
+        ]
+    },
+    {
+        "id": "3c2a717f8f93bffe",
+        "type": "template",
+        "z": "b836e4c1fe6439a3",
+        "g": "1525cbb195b6f6ae",
+        "name": "Page",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "json",
+        "syntax": "mustache",
+        "template": "{\n    \"NewState\": \"{{payload.NewEnable}}\"\n}",
+        "output": "json",
+        "x": 870,
+        "y": 200,
+        "wires": [
+            [
+                "2e985773b3207bfb"
+            ]
+        ]
+    },
+    {
+        "id": "2e985773b3207bfb",
+        "type": "http response",
+        "z": "b836e4c1fe6439a3",
+        "g": "1525cbb195b6f6ae",
+        "name": "http",
+        "statusCode": "200",
+        "headers": {},
+        "x": 1010,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "2c87795415b6743d",
+        "type": "switch",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "IfNotEmpty",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 2070,
+        "y": 520,
+        "wires": [
+            [
+                "d97b637cd10e77bf",
+                "931570c245c0dcf8"
+            ],
+            [
+                "2fad49ec7ab3ed25"
+            ]
+        ]
+    },
+    {
+        "id": "1a7b573d9e1542c4",
+        "type": "comment",
+        "z": "b836e4c1fe6439a3",
+        "g": "1525cbb195b6f6ae",
+        "name": "Guest WIFI",
+        "info": "# Guest-Wifi Toggle\n\nTurns on or off the Guest Wifi.",
+        "x": 110,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "b419e74a0ba80f78",
+        "type": "fritzbox-in",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "device": "6b667bb34ec64d53",
+        "name": "NumOfDectDevices",
+        "service": "urn:dslforum-org:service:X_AVM-DE_Dect:1",
+        "action": "GetNumberOfDectEntries",
+        "arguments": "{}",
+        "x": 530,
+        "y": 460,
+        "wires": [
+            [
+                "30f2eb0de22c5a2f",
+                "1fc3a271d8394a46"
+            ]
+        ]
+    },
+    {
+        "id": "30f2eb0de22c5a2f",
+        "type": "function",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "NumDevices",
+        "func": "const numDevices = parseInt(msg.payload.NewNumberOfEntries);\n\nmsg.enum = Array.from({ length: numDevices }, (x, i) => i);\nmsg.deviceEnum = [];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 560,
+        "wires": [
+            [
+                "c1dd73e32d4dac3b"
+            ]
+        ]
+    },
+    {
+        "id": "aa2812bb7e44d635",
+        "type": "fritzbox-in",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "device": "6b667bb34ec64d53",
+        "name": "GetDevice",
+        "service": "urn:dslforum-org:service:X_AVM-DE_Dect:1",
+        "action": "GetGenericDectEntry",
+        "arguments": "{\n  \"NewIndex\": \"value\"\n}",
+        "x": 630,
+        "y": 740,
+        "wires": [
+            [
+                "d0734367b980f32a",
+                "02618be48bd2c301"
+            ]
+        ]
+    },
+    {
+        "id": "10219db621a4a328",
+        "type": "function",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "Prepare Device Index",
+        "func": "msg.payload = {\n    \"NewIndex\": msg.loop.value.toString()\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 740,
+        "wires": [
+            [
+                "aa2812bb7e44d635"
+            ]
+        ]
+    },
+    {
+        "id": "90e2d9019ac813d0",
+        "type": "http in",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "[GET] /api/fritzbox/smarthome/:deviceName/:cmd",
+        "url": "/api/fritzbox/smarthome/:deviceName/:cmd",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 220,
+        "y": 460,
+        "wires": [
+            [
+                "b419e74a0ba80f78"
+            ]
+        ]
+    },
+    {
+        "id": "f0f2a9a523906568",
+        "type": "fritzbox-in",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "device": "6b667bb34ec64d53",
+        "name": "DectEntry",
+        "service": "urn:dslforum-org:service:X_AVM-DE_Homeauto:1",
+        "action": "GetGenericDeviceInfos",
+        "arguments": "{\n  \"NewIndex\": \"value\"\n}",
+        "x": 1560,
+        "y": 640,
+        "wires": [
+            [
+                "78d2c7941187c642",
+                "82354dfbdffb045c"
+            ]
+        ]
+    },
+    {
+        "id": "d0734367b980f32a",
+        "type": "switch",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "Switch-If-Not-Fone",
+        "property": "payload.NewModel",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "neq",
+                "v": "FRITZ!Fon C6",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 830,
+        "y": 740,
+        "wires": [
+            [
+                "34fba991d675aa82"
+            ],
+            [
+                "c1dd73e32d4dac3b"
+            ]
+        ]
+    },
+    {
+        "id": "34fba991d675aa82",
+        "type": "function",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "Add Count Enum",
+        "func": "// Count only devices which doesn't match the switch condition\n// for example: no FritzFon\nmsg.deviceEnum.push(msg.deviceEnum.length);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1090,
+        "y": 700,
+        "wires": [
+            [
+                "c1dd73e32d4dac3b"
+            ]
+        ]
+    },
+    {
+        "id": "860a7ca1cc30f855",
+        "type": "function",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "Set Device Filter Index",
+        "func": "msg.payload = {\n    NewIndex: msg.loop.value.toString()\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1360,
+        "y": 640,
+        "wires": [
+            [
+                "f0f2a9a523906568"
+            ]
+        ]
+    },
+    {
+        "id": "78d2c7941187c642",
+        "type": "function",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "Switch requested Device",
+        "func": "\nif ( msg.payload.NewDeviceName.toLowerCase() == msg.req.params.deviceName.toLowerCase() ) {\n    var deviceName = msg.payload.NewDeviceName.toLowerCase();\n    var ain = msg.payload.NewAIN;\n    var state = msg.payload.NewSwitchState.toLowerCase();\n\n    msg.payload = {\n        deviceName: deviceName,\n        ain: ain,\n        state: state\n    }\n\n    // Stop the loop\n    msg.command = \"break\";\n} else msg.payload = {};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1790,
+        "y": 640,
+        "wires": [
+            [
+                "bcda690b2c177020"
+            ]
+        ]
+    },
+    {
+        "id": "931570c245c0dcf8",
+        "type": "fritzbox-in",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "device": "6b667bb34ec64d53",
+        "name": "DectEntry",
+        "service": "urn:dslforum-org:service:X_AVM-DE_Homeauto:1",
+        "action": "SetSwitch",
+        "arguments": "{\n  \"NewAIN\": \"value\",\n  \"NewSwitchState\": \"value\"\n}",
+        "x": 2280,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2ed8244f592b52b0",
+        "type": "function",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "Set Switch (on/off)",
+        "func": "\nif ( Object.keys(msg.payload).length > 0 ) {\n    \n    var cmd = msg.req.params.cmd.toLowerCase();\n    var state = msg.payload.state.toLowerCase();\n\n    if(cmd === 'on' && state !== 'on') {\n        msg.payload = {\n            \"NewAIN\": msg.payload.ain,\n            \"NewSwitchState\": \"ON\"\n        }\n    } else if (cmd === 'off' && state !== 'off') {\n        msg.payload = {\n            \"NewAIN\": msg.payload.ain,\n            \"NewSwitchState\": \"OFF\"\n        }\n    } else if ( cmd == 'toggle' ) {\n        msg.payload = {\n            \"NewAIN\": msg.payload.ain,\n            \"NewSwitchState\": ( state == 'on' ) ? 'off' : 'on'\n        }\n    } else msg.payload = {};\n\n} else msg.payload = {};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1870,
+        "y": 520,
+        "wires": [
+            [
+                "2c87795415b6743d",
+                "a16d0990292042b6"
+            ]
+        ]
+    },
+    {
+        "id": "d97b637cd10e77bf",
+        "type": "template",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "Result",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "json",
+        "syntax": "mustache",
+        "template": "{\n    \"ain\": \"{{payload.NewAIN}}\",\n    \"state\": \"{{payload.NewSwitchState}}\"\n}\n",
+        "output": "json",
+        "x": 2270,
+        "y": 540,
+        "wires": [
+            [
+                "3700493d4715e70e"
+            ]
+        ]
+    },
+    {
+        "id": "3700493d4715e70e",
+        "type": "http response",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "[http] Output",
+        "statusCode": "200",
+        "headers": {},
+        "x": 2430,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "c1dd73e32d4dac3b",
+        "type": "loop",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "",
+        "kind": "enum",
+        "count": "",
+        "initial": "0",
+        "step": "1",
+        "condition": "msg.numLoops < msg.loop.index",
+        "conditionType": "js",
+        "when": "before",
+        "enumeration": "enum",
+        "enumerationType": "msg",
+        "limit": "",
+        "loopPayload": "loop-val",
+        "finalPayload": "final-last",
+        "x": 750,
+        "y": 560,
+        "wires": [
+            [
+                "bcda690b2c177020"
+            ],
+            [
+                "10219db621a4a328"
+            ]
+        ]
+    },
+    {
+        "id": "bcda690b2c177020",
+        "type": "loop",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "[Loop] Find device by deviceName",
+        "kind": "enum",
+        "count": "",
+        "initial": "0",
+        "step": "1",
+        "condition": "msg.numLoops < msg.loop.index",
+        "conditionType": "js",
+        "when": "before",
+        "enumeration": "deviceEnum",
+        "enumerationType": "msg",
+        "limit": "",
+        "loopPayload": "loop-val",
+        "finalPayload": "final-last",
+        "x": 1560,
+        "y": 560,
+        "wires": [
+            [
+                "2ed8244f592b52b0"
+            ],
+            [
+                "860a7ca1cc30f855"
+            ]
+        ]
+    },
+    {
+        "id": "02618be48bd2c301",
+        "type": "debug",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "[Debug] Device List",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "82354dfbdffb045c",
+        "type": "debug",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "[Debug] Device List filtered",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1820,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "81896ed98d9fa718",
+        "type": "comment",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "SmartHome",
+        "info": "# SmartHome Switch\n\nGets over the FritzBox TR-064 API the list \nof connected devices. After that it filters \nout the FritzFon (see switch node) and runs \nthrough the smarthome list,to identify the \ndevice which is requested to switch in \n\":deviceName\".\n\nAt the end it's decide to switch the device \nand returns the result to the output.",
+        "x": 110,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "2fad49ec7ab3ed25",
+        "type": "template",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "NoResult",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "json",
+        "syntax": "mustache",
+        "template": "{\n    \"error\": \"Device not found, or already {{state}}\"\n}",
+        "output": "json",
+        "x": 2280,
+        "y": 600,
+        "wires": [
+            [
+                "fbbb58fefeeddd32"
+            ]
+        ]
+    },
+    {
+        "id": "fbbb58fefeeddd32",
+        "type": "http response",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "[http] Output",
+        "statusCode": "200",
+        "headers": {},
+        "x": 2430,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "a16d0990292042b6",
+        "type": "debug",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "[Debug] Device Details",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2140,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "1fc3a271d8394a46",
+        "type": "debug",
+        "z": "b836e4c1fe6439a3",
+        "g": "17af548c752a868f",
+        "name": "[Debug] Num Devices",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "6b667bb34ec64d53",
+        "type": "fritzbox-config",
+        "name": "FritzBox",
+        "host": "192.168.178.1",
+        "port": "49443",
+        "ssl": true,
+        "user": "smarthome"
+    }
+]
